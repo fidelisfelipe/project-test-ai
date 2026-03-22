@@ -6,8 +6,10 @@ import com.flightmonitor.domain.entity.SearchLog;
 import com.flightmonitor.domain.enums.CabinClass;
 import com.flightmonitor.dto.request.FlightSearchRequest;
 import com.flightmonitor.dto.response.FlightOfferResponse;
+import com.flightmonitor.exception.AmadeusApiException;
 import com.flightmonitor.mapper.FlightOfferMapper;
-import com.flightmonitor.messaging.FlightSearchProducer;
+import com.flightmonitor.messaging.MessageBus;
+import com.flightmonitor.messaging.MessageSendResult;
 import com.flightmonitor.messaging.dto.FlightSearchRequestMessage;
 import com.flightmonitor.repository.FlightOfferRepository;
 import com.flightmonitor.repository.SearchLogRepository;
@@ -22,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Implementation of the FlightSearchService.
@@ -36,7 +41,7 @@ public class FlightSearchServiceImpl implements FlightSearchService {
     private final SearchLogRepository searchLogRepository;
     private final PriceHistoryService priceHistoryService;
     private final AlertService alertService;
-    private final FlightSearchProducer flightSearchProducer;
+    private final MessageBus messageBus;
     private final FlightOfferMapper flightOfferMapper;
 
     public FlightSearchServiceImpl(
@@ -45,14 +50,14 @@ public class FlightSearchServiceImpl implements FlightSearchService {
             SearchLogRepository searchLogRepository,
             PriceHistoryService priceHistoryService,
             AlertService alertService,
-            FlightSearchProducer flightSearchProducer,
+            MessageBus messageBus,
             FlightOfferMapper flightOfferMapper) {
         this.amadeusClient = amadeusClient;
         this.flightOfferRepository = flightOfferRepository;
         this.searchLogRepository = searchLogRepository;
         this.priceHistoryService = priceHistoryService;
         this.alertService = alertService;
-        this.flightSearchProducer = flightSearchProducer;
+        this.messageBus = messageBus;
         this.flightOfferMapper = flightOfferMapper;
     }
 
@@ -72,15 +77,25 @@ public class FlightSearchServiceImpl implements FlightSearchService {
         String correlationId = UUID.randomUUID().toString();
         log.info("Starting flight search correlationId={} route={}->{} date={}", correlationId, request.origin(), request.destination(), request.departureDate());
 
-        flightSearchProducer.sendSearchRequest(new FlightSearchRequestMessage(
-                correlationId,
-                request.origin(),
-                request.destination(),
-                request.departureDate(),
-                request.returnDate(),
-                request.adults(),
-                request.cabinClass()
-        ));
+        try {
+            MessageSendResult sendResult = messageBus.sendSearchRequest(new FlightSearchRequestMessage(
+                    correlationId,
+                    request.origin(),
+                    request.destination(),
+                    request.departureDate(),
+                    request.returnDate(),
+                    request.adults(),
+                    request.cabinClass()
+            )).get(30, TimeUnit.SECONDS);
+            if (!sendResult.success()) {
+                throw new AmadeusApiException("Failed to dispatch search request: " + sendResult.errorMessage(), null);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new AmadeusApiException("Message bus dispatch interrupted for search request", e);
+        } catch (ExecutionException | TimeoutException e) {
+            throw new AmadeusApiException("Search request dispatch failed: " + e.getMessage(), e);
+        }
 
         List<FlightOfferResponse> offers = amadeusClient.searchFlights(request);
         List<FlightOfferResponse> sorted = offers.stream()

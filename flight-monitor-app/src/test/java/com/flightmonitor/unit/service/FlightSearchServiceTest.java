@@ -5,7 +5,9 @@ import com.flightmonitor.domain.enums.CabinClass;
 import com.flightmonitor.dto.request.FlightSearchRequest;
 import com.flightmonitor.dto.response.FlightOfferResponse;
 import com.flightmonitor.mapper.FlightOfferMapper;
-import com.flightmonitor.messaging.FlightSearchProducer;
+import com.flightmonitor.messaging.MessageBus;
+import com.flightmonitor.messaging.MessageSendResult;
+import com.flightmonitor.messaging.BrokerType;
 import com.flightmonitor.messaging.dto.FlightSearchRequestMessage;
 import com.flightmonitor.repository.FlightOfferRepository;
 import com.flightmonitor.repository.SearchLogRepository;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,6 +35,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +54,7 @@ class FlightSearchServiceTest {
     @Mock
     private AlertService alertService;
     @Mock
-    private FlightSearchProducer flightSearchProducer;
+    private MessageBus messageBus;
     @Mock
     private FlightOfferMapper flightOfferMapper;
 
@@ -58,9 +62,12 @@ class FlightSearchServiceTest {
 
     @BeforeEach
     void setUp() {
+        lenient().when(messageBus.sendSearchRequest(any())).thenReturn(
+                CompletableFuture.completedFuture(
+                        MessageSendResult.ok(BrokerType.SYNC, "test-id", 0)));
         service = new FlightSearchServiceImpl(
                 amadeusClient, flightOfferRepository, searchLogRepository,
-                priceHistoryService, alertService, flightSearchProducer, flightOfferMapper);
+                priceHistoryService, alertService, messageBus, flightOfferMapper);
     }
 
     @Test
@@ -102,7 +109,7 @@ class FlightSearchServiceTest {
     }
 
     @Test
-    void searchFlights_publishesKafkaMessage() {
+    void searchFlights_publishesMessageViaMessageBus() {
         FlightSearchRequest request = validRequest();
         when(amadeusClient.searchFlights(any())).thenReturn(List.of());
         when(searchLogRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -111,7 +118,7 @@ class FlightSearchServiceTest {
         service.searchFlights(request);
 
         ArgumentCaptor<FlightSearchRequestMessage> captor = ArgumentCaptor.forClass(FlightSearchRequestMessage.class);
-        verify(flightSearchProducer).sendSearchRequest(captor.capture());
+        verify(messageBus).sendSearchRequest(captor.capture());
         assertThat(captor.getValue().origin()).isEqualTo("BSB");
         assertThat(captor.getValue().destination()).isEqualTo("LIS");
     }

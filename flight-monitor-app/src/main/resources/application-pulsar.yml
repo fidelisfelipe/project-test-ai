@@ -1,0 +1,8 @@
+spring:
+  pulsar:
+    client:
+      service-url: ${PULSAR_SERVICE_URL:pulsar://localhost:6650}
+    producer:
+      send-timeout: 30s
+    consumer:
+      subscription-initial-position: earliest

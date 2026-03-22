@@ -5,7 +5,9 @@ import com.flightmonitor.domain.enums.AlertStatus;
 import com.flightmonitor.dto.request.CreateAlertRequest;
 import com.flightmonitor.dto.response.PriceAlertResponse;
 import com.flightmonitor.mapper.PriceAlertMapper;
-import com.flightmonitor.messaging.PriceAlertProducer;
+import com.flightmonitor.messaging.MessageBus;
+import com.flightmonitor.messaging.MessageSendResult;
+import com.flightmonitor.messaging.BrokerType;
 import com.flightmonitor.repository.PriceAlertRepository;
 import com.flightmonitor.service.AlertServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,13 +39,13 @@ class AlertServiceTest {
     @Mock
     private PriceAlertMapper alertMapper;
     @Mock
-    private PriceAlertProducer priceAlertProducer;
+    private MessageBus messageBus;
 
     private AlertServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new AlertServiceImpl(alertRepository, alertMapper, priceAlertProducer);
+        service = new AlertServiceImpl(alertRepository, alertMapper, messageBus);
     }
 
     @Test

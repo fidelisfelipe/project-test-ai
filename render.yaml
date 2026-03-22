@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: flight-monitor-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
+    branch: main
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: sync
+      - key: AMADEUS_API_KEY
+        sync: false
+      - key: AMADEUS_API_SECRET
+        sync: false
+      - key: SERVER_PORT
+        value: "8080"
+    autoDeploy: true
