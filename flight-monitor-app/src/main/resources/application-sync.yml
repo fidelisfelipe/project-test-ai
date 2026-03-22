@@ -13,3 +13,7 @@ amadeus:
 flight:
   monitor:
     mock-mode: true
+  aggregator:
+    enabled: false
+    sources:
+      - mock
