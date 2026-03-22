@@ -1,6 +1,6 @@
 package com.flightmonitor.service;
 
-import com.flightmonitor.dto.response.FlightReportResponse;
+import com.flightmonitor.dto.response.FlightOfferResponse;
 import com.flightmonitor.dto.response.PriceHistoryResponse;
 
 import java.time.LocalDate;
