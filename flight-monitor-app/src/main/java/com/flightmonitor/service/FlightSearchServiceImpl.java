@@ -92,7 +92,7 @@ public class FlightSearchServiceImpl implements FlightSearchService {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new AmadeusApiException("Search request interrupted", e);
+            throw new AmadeusApiException("Message bus dispatch interrupted for search request", e);
         } catch (ExecutionException | TimeoutException e) {
             throw new AmadeusApiException("Search request dispatch failed: " + e.getMessage(), e);
         }

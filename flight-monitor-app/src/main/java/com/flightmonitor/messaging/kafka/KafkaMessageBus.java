@@ -81,7 +81,7 @@ public class KafkaMessageBus implements MessageBus {
     @Override
     public boolean isAvailable() {
         try {
-            kafkaTemplate.getProducerFactory().createProducer().partitionsFor("flight.search.requests");
+            kafkaTemplate.getProducerFactory().createProducer().partitionsFor(KafkaConfig.FLIGHT_SEARCH_REQUESTS_TOPIC);
             return true;
         } catch (Exception e) {
             log.warn("[KAFKA] Broker not available: {}", e.getMessage());
