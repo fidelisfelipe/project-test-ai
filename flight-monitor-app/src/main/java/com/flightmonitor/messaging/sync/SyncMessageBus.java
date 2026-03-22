@@ -55,15 +55,19 @@ public class SyncMessageBus implements MessageBus {
     @Override
     public CompletableFuture<MessageSendResult> sendPriceAlert(PriceAlertMessage message) {
         long start = System.currentTimeMillis();
+        String alertId = message.alertId().toString();
+        MDC.put("correlationId", alertId);
         try {
             messageHandler.handlePriceAlert(message);
             long elapsed = System.currentTimeMillis() - start;
             return CompletableFuture.completedFuture(
-                    MessageSendResult.ok(BrokerType.SYNC, message.alertId().toString(), elapsed));
+                    MessageSendResult.ok(BrokerType.SYNC, alertId, elapsed));
         } catch (Exception ex) {
-            log.warn("[SYNC] Price alert handling failed alertId={}: {}", message.alertId(), ex.getMessage());
+            log.warn("[SYNC] Price alert handling failed alertId={}: {}", alertId, ex.getMessage());
             return CompletableFuture.completedFuture(
                     MessageSendResult.failed(BrokerType.SYNC, ex.getMessage()));
+        } finally {
+            MDC.remove("correlationId");
         }
     }
 

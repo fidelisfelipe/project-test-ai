@@ -24,9 +24,9 @@ public class RabbitMQMessageBus implements MessageBus {
 
     private static final Logger log = LoggerFactory.getLogger(RabbitMQMessageBus.class);
 
-    static final String FLIGHT_EXCHANGE = "flight.exchange";
-    static final String SEARCH_REQUESTS_ROUTING_KEY = "flight.search.requests";
-    static final String PRICE_ALERTS_ROUTING_KEY = "price.alerts";
+    public static final String FLIGHT_EXCHANGE = "flight.exchange";
+    public static final String SEARCH_REQUESTS_ROUTING_KEY = "flight.search.requests";
+    public static final String PRICE_ALERTS_ROUTING_KEY = "price.alerts";
 
     private final RabbitTemplate rabbitTemplate;
 

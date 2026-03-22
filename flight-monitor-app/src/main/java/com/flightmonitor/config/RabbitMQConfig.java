@@ -38,12 +38,14 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding searchRequestsBinding(Queue searchRequestsQueue, TopicExchange flightExchange) {
-        return BindingBuilder.bind(searchRequestsQueue).to(flightExchange).with(SEARCH_REQUESTS_QUEUE);
+        return BindingBuilder.bind(searchRequestsQueue).to(flightExchange)
+                .with(com.flightmonitor.messaging.rabbitmq.RabbitMQMessageBus.SEARCH_REQUESTS_ROUTING_KEY);
     }
 
     @Bean
     public Binding priceAlertsBinding(Queue priceAlertsQueue, TopicExchange flightExchange) {
-        return BindingBuilder.bind(priceAlertsQueue).to(flightExchange).with(PRICE_ALERTS_QUEUE);
+        return BindingBuilder.bind(priceAlertsQueue).to(flightExchange)
+                .with(com.flightmonitor.messaging.rabbitmq.RabbitMQMessageBus.PRICE_ALERTS_ROUTING_KEY);
     }
 
     @Bean

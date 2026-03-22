@@ -15,7 +15,6 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -50,7 +49,13 @@ public class KafkaMessageBus implements MessageBus {
                         log.error("[KAFKA] Failed to send search request correlationId={}: {}", correlationId, ex.getMessage());
                         return MessageSendResult.failed(BrokerType.KAFKA, ex.getMessage());
                     }
-                    String offset = result != null ? String.valueOf(result.getRecordMetadata().offset()) : UUID.randomUUID().toString();
+                    String offset;
+                    if (result != null) {
+                        offset = String.valueOf(result.getRecordMetadata().offset());
+                    } else {
+                        log.warn("[KAFKA] Unexpected null result for correlationId={}", correlationId);
+                        offset = correlationId;
+                    }
                     log.info("[KAFKA] Sent search request correlationId={} offset={}", correlationId, offset);
                     return MessageSendResult.ok(BrokerType.KAFKA, offset, elapsed);
                 });
@@ -67,7 +72,13 @@ public class KafkaMessageBus implements MessageBus {
                         log.error("[KAFKA] Failed to send price alert alertId={}: {}", alertId, ex.getMessage());
                         return MessageSendResult.failed(BrokerType.KAFKA, ex.getMessage());
                     }
-                    String offset = result != null ? String.valueOf(result.getRecordMetadata().offset()) : UUID.randomUUID().toString();
+                    String offset;
+                    if (result != null) {
+                        offset = String.valueOf(result.getRecordMetadata().offset());
+                    } else {
+                        log.warn("[KAFKA] Unexpected null result for alertId={}", alertId);
+                        offset = alertId;
+                    }
                     log.info("[KAFKA] Sent price alert alertId={} offset={}", alertId, offset);
                     return MessageSendResult.ok(BrokerType.KAFKA, offset, elapsed);
                 });

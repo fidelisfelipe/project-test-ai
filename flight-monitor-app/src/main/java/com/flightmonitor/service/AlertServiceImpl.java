@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Implementation of the AlertService.
@@ -157,8 +159,13 @@ public class AlertServiceImpl implements AlertService {
                 );
                 try {
                     messageBus.sendPriceAlert(alertMessage).get(30, TimeUnit.SECONDS);
-                } catch (Exception e) {
-                    log.warn("Failed to send price alert alertId={}: {}", alert.getId(), e.getMessage());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    log.warn("Interrupted while sending price alert alertId={}: {}", alert.getId(), e.getMessage());
+                } catch (ExecutionException e) {
+                    log.warn("Failed to send price alert alertId={}: {}", alert.getId(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage());
+                } catch (TimeoutException e) {
+                    log.warn("Timed out sending price alert alertId={}", alert.getId());
                 }
                 log.info("Alert triggered id={} user={} price={} target={}", alert.getId(), alert.getUserEmail(), currentMinPrice, alert.getTargetPrice());
             } else {

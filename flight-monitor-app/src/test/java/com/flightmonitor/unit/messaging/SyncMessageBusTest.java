@@ -1,6 +1,7 @@
 package com.flightmonitor.unit.messaging;
 
 import com.flightmonitor.domain.enums.CabinClass;
+import com.flightmonitor.messaging.BrokerType;
 import com.flightmonitor.messaging.MessageHandler;
 import com.flightmonitor.messaging.MessageSendResult;
 import com.flightmonitor.messaging.dto.FlightSearchRequestMessage;
@@ -45,7 +46,7 @@ class SyncMessageBusTest {
 
         assertThat(future).isDone();
         assertThat(future.get().success()).isTrue();
-        assertThat(future.get().brokerType()).isEqualTo("SYNC");
+        assertThat(future.get().brokerType()).isEqualTo(BrokerType.SYNC.name());
     }
 
     @Test

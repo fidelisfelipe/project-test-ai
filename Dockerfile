@@ -5,7 +5,7 @@ COPY flight-monitor-app/pom.xml flight-monitor-app/
 COPY flight-monitor-admin/pom.xml flight-monitor-admin/
 
 RUN mvn dependency:go-offline -B -pl flight-monitor-app \
-    --no-transfer-progress 2>/dev/null || true
+    --no-transfer-progress || true
 
 COPY flight-monitor-app/src flight-monitor-app/src
 COPY flight-monitor-admin/src flight-monitor-admin/src
