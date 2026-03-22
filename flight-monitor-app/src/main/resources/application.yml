@@ -55,7 +55,7 @@ amadeus:
   api:
     key: ${AMADEUS_API_KEY:test-key}
     secret: ${AMADEUS_API_SECRET:test-secret}
-    host: ${AMADEUS_HOST:test.api.amadeus.com}
+    host: ${AMADEUS_HOST:test}
 
 flight:
   monitor:

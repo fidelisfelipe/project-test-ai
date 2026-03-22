@@ -17,7 +17,7 @@ amadeus:
   api:
     key: test-key
     secret: test-secret
-    host: test.api.amadeus.com
+    host: test
 
 logging:
   level:
