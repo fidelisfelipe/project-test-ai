@@ -19,12 +19,12 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * Mock implementation of AmadeusClient for sync profile (free tier / CI environments).
+ * Mock implementation of AmadeusClient for sync and test profiles (free tier / CI environments).
  * Returns realistic simulated flight offers without calling the real Amadeus API.
  */
 @Component
 @Primary
-@Profile("sync")
+@Profile({"sync", "test"})
 public class AmadeusClientMock implements AmadeusClient {
 
     private static final Logger log = LoggerFactory.getLogger(AmadeusClientMock.class);
