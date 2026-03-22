@@ -13,6 +13,10 @@ RUN mvn package -pl flight-monitor-app -am \
 FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
 RUN addgroup -S flightmonitor && adduser -S flightmonitor -G flightmonitor
+
+# ✅ Criar o diretório e dar ownership ANTES de trocar de usuário
+RUN mkdir -p /app/data && chown -R flightmonitor:flightmonitor /app/data
+
 USER flightmonitor
 COPY --from=build /app/flight-monitor-app/target/*.jar app.jar
 ENV SPRING_PROFILES_ACTIVE=sync
