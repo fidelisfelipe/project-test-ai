@@ -1,0 +1,98 @@
+spring:
+  application:
+    name: flight-monitor-app
+  datasource:
+    url: jdbc:h2:file:./data/flightdb;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+    consumer:
+      group-id: flight-monitor-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.flightmonitor.*"
+    listener:
+      concurrency: 10
+      ack-mode: MANUAL_IMMEDIATE
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URL:http://localhost:8081}
+        instance:
+          metadata:
+            tags:
+              environment: dev
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=300s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+      post:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+amadeus:
+  api:
+    key: ${AMADEUS_API_KEY:test-key}
+    secret: ${AMADEUS_API_SECRET:test-secret}
+    host: ${AMADEUS_HOST:test.api.amadeus.com}
+
+flight:
+  monitor:
+    default-currency: EUR
+    max-results: 20
+    cache-ttl-minutes: 5
+    alert:
+      check-interval-minutes: 30
+      email-enabled: ${ALERT_EMAIL_ENABLED:false}
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 20

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Results - Flight Monitor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-dark text-light" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <i class="bi bi-airplane-fill me-2 text-warning"></i>Flight Monitor
+        </a>
+    </div>
+</nav>
+<main class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4><i class="bi bi-list-ul me-2"></i>Search Results
+            <span th:if="${origin}" class="text-warning" th:text="'(' + ${origin} + ' → ' + ${destination} + ')'"></span>
+        </h4>
+        <a th:href="@{/flights/search}" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>New Search
+        </a>
+    </div>
+
+    <div th:if="${results == null or results.isEmpty()}" class="alert alert-info">
+        No flights found. Please try different search criteria.
+    </div>
+
+    <div th:if="${results != null and !results.isEmpty()}">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover table-bordered align-middle" id="resultsTable">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Airline</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Departure</th>
+                        <th>Stops</th>
+                        <th>Duration</th>
+                        <th>Cabin</th>
+                        <th class="sortable" data-sort="price">Price <i class="bi bi-arrow-down-up"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="offer : ${results}">
+                        <td th:text="${offer.airline}">AA</td>
+                        <td th:text="${offer.origin}">BSB</td>
+                        <td th:text="${offer.destination}">LIS</td>
+                        <td th:text="${#temporals.format(offer.departureDate, 'dd MMM yyyy')}">01 Jan 2025</td>
+                        <td>
+                            <span th:if="${offer.stops == 0}" class="badge bg-success">Direct</span>
+                            <span th:unless="${offer.stops == 0}" class="badge bg-warning text-dark"
+                                  th:text="${offer.stops} + ' stop(s)'">1 stop(s)</span>
+                        </td>
+                        <td th:text="${offer.duration}">PT5H30M</td>
+                        <td th:text="${offer.cabinClass}">ECONOMY</td>
+                        <td class="fw-bold text-warning">
+                            <span th:text="${offer.currency + ' ' + #numbers.formatDecimal(offer.price, 1, 2)}">EUR 299.99</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

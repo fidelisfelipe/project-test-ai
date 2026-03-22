@@ -1,0 +1,43 @@
+/* Flight Monitor — Main CSS */
+
+:root {
+    --fm-primary: #0d6efd;
+    --fm-warning: #ffc107;
+    --fm-dark: #1a1a2e;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+}
+
+.btn-warning {
+    color: #000;
+    font-weight: 600;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background-color: rgba(255, 193, 7, 0.15);
+}
+
+table {
+    font-size: 0.9rem;
+}
+
+canvas {
+    max-height: 350px;
+}

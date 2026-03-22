@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Alerts - Flight Monitor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-dark text-light" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Flight Monitor</a>
+    </div>
+</nav>
+<main class="container my-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h4>My Alerts</h4>
+        <a th:href="@{/alerts/create}" class="btn btn-warning btn-sm">Create New Alert</a>
+    </div>
+    <div th:if="${alerts == null or alerts.isEmpty()}" class="alert alert-info">
+        No alerts configured. <a th:href="@{/alerts/create}">Create one now</a>.
+    </div>
+    <table th:if="${alerts != null and !alerts.isEmpty()}" class="table table-dark table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Route</th>
+                <th>Date</th>
+                <th>Target Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="alert : ${alerts}">
+                <td th:text="${alert.origin} + ' → ' + ${alert.destination}">BSB → LIS</td>
+                <td th:text="${alert.departureDate}">2025-06-01</td>
+                <td class="text-warning" th:text="'EUR ' + ${alert.targetPrice}">EUR 299</td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${alert.status.name() == 'ACTIVE'} ? 'bg-success' : (${alert.status.name() == 'TRIGGERED'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                          th:text="${alert.status}">ACTIVE</span>
+                </td>
+                <td>
+                    <a th:href="@{'/api/v1/alerts/' + ${alert.id} + '/pause'}" class="btn btn-sm btn-outline-secondary">Pause</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

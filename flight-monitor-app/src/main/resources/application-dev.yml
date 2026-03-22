@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.flightmonitor: DEBUG
+    org.springframework: INFO
