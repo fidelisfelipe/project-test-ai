@@ -11,6 +11,7 @@ import com.flightmonitor.dto.response.FlightOfferResponse;
 import com.flightmonitor.exception.AmadeusApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.UUID;
  * Implementation of the AmadeusClient that calls the Amadeus flight search API.
  */
 @Component
+@Profile("!sync")
 public class AmadeusClientImpl implements AmadeusClient {
 
     private static final Logger log = LoggerFactory.getLogger(AmadeusClientImpl.class);

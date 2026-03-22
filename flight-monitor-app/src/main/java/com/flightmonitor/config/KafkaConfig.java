@@ -4,6 +4,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.CommonErrorHandler;
@@ -19,6 +20,7 @@ import java.util.concurrent.Executors;
  * Kafka configuration including topics and error handling.
  */
 @Configuration
+@Profile("kafka")
 public class KafkaConfig {
 
     public static final String FLIGHT_SEARCH_REQUESTS_TOPIC = "flight.search.requests";

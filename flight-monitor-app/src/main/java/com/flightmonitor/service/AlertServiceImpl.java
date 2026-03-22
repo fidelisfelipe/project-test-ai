@@ -6,7 +6,7 @@ import com.flightmonitor.dto.request.CreateAlertRequest;
 import com.flightmonitor.dto.response.PriceAlertResponse;
 import com.flightmonitor.exception.FlightNotFoundException;
 import com.flightmonitor.mapper.PriceAlertMapper;
-import com.flightmonitor.messaging.PriceAlertProducer;
+import com.flightmonitor.messaging.MessageBus;
 import com.flightmonitor.messaging.dto.PriceAlertMessage;
 import com.flightmonitor.repository.PriceAlertRepository;
 import org.slf4j.Logger;
@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of the AlertService.
@@ -29,14 +30,14 @@ public class AlertServiceImpl implements AlertService {
 
     private final PriceAlertRepository alertRepository;
     private final PriceAlertMapper alertMapper;
-    private final PriceAlertProducer priceAlertProducer;
+    private final MessageBus messageBus;
 
     public AlertServiceImpl(PriceAlertRepository alertRepository,
                             PriceAlertMapper alertMapper,
-                            PriceAlertProducer priceAlertProducer) {
+                            MessageBus messageBus) {
         this.alertRepository = alertRepository;
         this.alertMapper = alertMapper;
-        this.priceAlertProducer = priceAlertProducer;
+        this.messageBus = messageBus;
     }
 
     /**
@@ -144,7 +145,7 @@ public class AlertServiceImpl implements AlertService {
                 alert.setStatus(AlertStatus.TRIGGERED);
                 alert.setTriggeredAt(LocalDateTime.now());
                 alertRepository.save(alert);
-                priceAlertProducer.sendAlert(new PriceAlertMessage(
+                PriceAlertMessage alertMessage = new PriceAlertMessage(
                         alert.getId(),
                         alert.getUserEmail(),
                         alert.getOrigin(),
@@ -153,7 +154,12 @@ public class AlertServiceImpl implements AlertService {
                         alert.getTargetPrice(),
                         currentMinPrice,
                         LocalDateTime.now()
-                ));
+                );
+                try {
+                    messageBus.sendPriceAlert(alertMessage).get(30, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    log.warn("Failed to send price alert alertId={}: {}", alert.getId(), e.getMessage());
+                }
                 log.info("Alert triggered id={} user={} price={} target={}", alert.getId(), alert.getUserEmail(), currentMinPrice, alert.getTargetPrice());
             } else {
                 alertRepository.save(alert);

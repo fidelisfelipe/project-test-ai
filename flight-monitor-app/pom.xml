@@ -55,6 +55,18 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- RabbitMQ — auto-configures when profile=rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- Pulsar — Spring Boot BOM 3.3.x manages the version -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-pulsar</artifactId>
+        </dependency>
+
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
