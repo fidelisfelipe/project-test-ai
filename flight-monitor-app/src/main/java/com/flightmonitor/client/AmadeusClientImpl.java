@@ -24,7 +24,7 @@ import java.util.UUID;
  * Implementation of the AmadeusClient that calls the Amadeus flight search API.
  */
 @Component
-@Profile("!sync")
+@Profile("!sync & !test")
 public class AmadeusClientImpl implements AmadeusClient {
 
     private static final Logger log = LoggerFactory.getLogger(AmadeusClientImpl.class);
