@@ -1,0 +1,53 @@
+{
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Guarulhos", "id": "GRU", "time": "2026-04-15 10:00" },
+          "arrival_airport": { "name": "Lisboa", "id": "LIS", "time": "2026-04-15 22:30" },
+          "duration": 750,
+          "airline": "TAP Air Portugal",
+          "flight_number": "TP 083",
+          "travel_class": "Economy",
+          "airplane": "Airbus A330"
+        }
+      ],
+      "price": 2850,
+      "total_duration": 750,
+      "type": "One way",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/TP.png"
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Guarulhos", "id": "GRU", "time": "2026-04-15 14:00" },
+          "arrival_airport": { "name": "Madrid", "id": "MAD", "time": "2026-04-16 04:00" },
+          "duration": 660,
+          "airline": "Iberia",
+          "flight_number": "IB 6832",
+          "travel_class": "Economy",
+          "airplane": "Boeing 787"
+        },
+        {
+          "departure_airport": { "name": "Madrid", "id": "MAD", "time": "2026-04-16 07:00" },
+          "arrival_airport": { "name": "Lisboa", "id": "LIS", "time": "2026-04-16 08:05" },
+          "duration": 65,
+          "airline": "Iberia",
+          "flight_number": "IB 3102",
+          "travel_class": "Economy",
+          "airplane": "Airbus A320"
+        }
+      ],
+      "price": 3200,
+      "total_duration": 785,
+      "type": "One way"
+    }
+  ],
+  "price_insights": {
+    "lowest_price": 2850,
+    "price_level": "typical",
+    "typical_price_range": [2500, 4500]
+  }
+}

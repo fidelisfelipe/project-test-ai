@@ -65,6 +65,13 @@ flight:
     alert:
       check-interval-minutes: 30
       email-enabled: ${ALERT_EMAIL_ENABLED:false}
+  aggregator:
+    enabled: false
+    sources:
+      - amadeus
+    timeout-seconds: 10
+    deduplicate-by-flight-number: true
+    max-results-per-source: 20
 
 server:
   port: 8080

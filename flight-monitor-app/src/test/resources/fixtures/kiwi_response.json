@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": "abc123",
+      "flyFrom": "GRU",
+      "flyTo": "LIS",
+      "cityFrom": "São Paulo",
+      "cityTo": "Lisboa",
+      "airlines": ["TP"],
+      "price": 2750.0,
+      "currency": "BRL",
+      "duration": { "departure": 45000, "return": 0, "total": 45000 },
+      "route": [
+        {
+          "flyFrom": "GRU",
+          "flyTo": "LIS",
+          "airline": "TP",
+          "flight_no": 83,
+          "local_departure": "2026-04-15T10:00:00.000Z",
+          "local_arrival": "2026-04-15T22:30:00.000Z",
+          "equipment": "333"
+        }
+      ],
+      "deep_link": "https://www.kiwi.com/deep?flightsId=abc123&lang=pt&currency=BRL"
+    }
+  ],
+  "currency": "BRL",
+  "_results": 1
+}

@@ -17,4 +17,13 @@ public interface AmadeusClient {
      * @return list of matching flight offers
      */
     List<FlightOfferResponse> searchFlights(FlightSearchRequest request);
+
+    /**
+     * Returns the flight data source identifier for this client.
+     *
+     * @return the source of flight data
+     */
+    default FlightSource getSource() {
+        return FlightSource.AMADEUS;
+    }
 }
