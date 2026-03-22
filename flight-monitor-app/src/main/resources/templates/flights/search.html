@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Flights - Flight Monitor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-dark text-light" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <i class="bi bi-airplane-fill me-2 text-warning"></i>Flight Monitor
+        </a>
+    </div>
+</nav>
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-secondary border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-search me-2"></i>Search Flights</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/flights/search}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="origin" class="form-label">Origin (IATA)</label>
+                                <input type="text" class="form-control" id="origin" name="origin"
+                                       placeholder="e.g. BSB, GRU, LIS" pattern="[A-Z]{3}" maxlength="3"
+                                       required style="text-transform:uppercase;">
+                                <div class="form-text">Suggested: BSB, OPO, LIS, GRU, GIG</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="destination" class="form-label">Destination (IATA)</label>
+                                <input type="text" class="form-control" id="destination" name="destination"
+                                       placeholder="e.g. OPO, LHR, CDG" pattern="[A-Z]{3}" maxlength="3"
+                                       required style="text-transform:uppercase;">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="departureDate" class="form-label">Departure Date</label>
+                                <input type="date" class="form-control" id="departureDate" name="departureDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="returnDate" class="form-label">Return Date (optional)</label>
+                                <input type="date" class="form-control" id="returnDate" name="returnDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="adults" class="form-label">Adults</label>
+                                <input type="number" class="form-control" id="adults" name="adults" value="1" min="1" max="9">
+                            </div>
+                            <div class="col-md-8">
+                                <label for="cabinClass" class="form-label">Cabin Class</label>
+                                <select class="form-select" id="cabinClass" name="cabinClass">
+                                    <option value="ECONOMY" selected>Economy</option>
+                                    <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                                    <option value="BUSINESS">Business</option>
+                                    <option value="FIRST">First</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-warning fw-bold w-100">
+                                <i class="bi bi-search me-2"></i>Search Flights
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Alert - Flight Monitor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-dark text-light" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Flight Monitor</a>
+    </div>
+</nav>
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card bg-secondary border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create Price Alert</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/api/v1/alerts}" method="post" id="createAlertForm">
+                        <div class="mb-3">
+                            <label class="form-label">Your Email</label>
+                            <input type="email" class="form-control" name="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Origin (IATA)</label>
+                            <input type="text" class="form-control" name="origin" pattern="[A-Z]{3}" maxlength="3" style="text-transform:uppercase;" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Destination (IATA)</label>
+                            <input type="text" class="form-control" name="destination" pattern="[A-Z]{3}" maxlength="3" style="text-transform:uppercase;" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Departure Date</label>
+                            <input type="date" class="form-control" name="departureDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Target Price (EUR)</label>
+                            <input type="number" class="form-control" name="targetPrice" min="1" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">Create Alert</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

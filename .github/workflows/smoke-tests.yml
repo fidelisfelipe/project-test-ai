@@ -1,0 +1,42 @@
+name: Smoke Tests — Post Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_url:
+        description: 'Application URL to test against'
+        required: true
+        type: string
+  repository_dispatch:
+    types: [post-deploy]
+
+jobs:
+  smoke-tests:
+    name: Run Smoke Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run smoke tests
+        env:
+          APP_URL: ${{ inputs.app_url || github.event.client_payload.app_url }}
+        run: |
+          echo "Running smoke tests against $APP_URL"
+          mvn failsafe:integration-test failsafe:verify \
+            -Dapp.url=$APP_URL \
+            --no-transfer-progress
+
+      - name: Upload smoke test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-test-results
+          path: '**/target/failsafe-reports/'
