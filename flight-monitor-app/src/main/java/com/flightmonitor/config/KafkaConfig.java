@@ -86,6 +86,6 @@ public class KafkaConfig {
 
     @Bean(name = "virtualThreadExecutor")
     public Executor virtualThreadExecutor() {
-        return Executors.newVirtualThreadPerTaskExecutor();
+        return Executors.newCachedThreadPool();
     }
 }

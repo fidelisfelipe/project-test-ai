@@ -27,10 +27,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run smoke tests on staging
-        uses: ./.github/workflows/smoke-tests.yml
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
         with:
-          app_url: ${{ vars.STAGING_URL }}
+          java-version: '17'
+          distribution: temurin
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+
+      - name: Run smoke tests on staging
+        run: mvn test -P smoke-only -Dapp.base.url=${{ vars.STAGING_URL }} -pl flight-monitor-app
 
   deploy-production:
     name: Deploy to Production

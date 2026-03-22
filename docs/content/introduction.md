@@ -1,6 +1,6 @@
 # Introduction
 
-Flight Price Monitor is a real-time flight price tracking platform built with Java 21, Spring Boot 3.3, Apache Kafka, and Thymeleaf.
+Flight Price Monitor is a real-time flight price tracking platform built with Java 17, Spring Boot 3.3, Apache Kafka, and Thymeleaf.
 
 ## What It Does
 

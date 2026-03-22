@@ -42,6 +42,6 @@ A dedicated Spring Boot Admin Server that:
 | Database (dev) | H2 file mode | Zero setup, persistent between restarts |
 | Cache | Caffeine | In-memory, high performance, simple config |
 | Messaging | Apache Kafka | Async, decoupled flight searches |
-| Virtual Threads | Java 21 Loom | High concurrency without thread pool tuning |
+| Virtual Threads | Java 17 (cached thread pool) | High concurrency without thread pool tuning |
 | API Docs | SpringDoc OpenAPI 3 | Auto-generated from annotations |
 | UI | Thymeleaf + Bootstrap 5 | Server-side rendering, no SPA complexity |
