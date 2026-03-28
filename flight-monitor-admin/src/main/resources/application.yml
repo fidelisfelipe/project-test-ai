@@ -3,8 +3,10 @@ spring:
     name: flight-monitor-admin
   security:
     user:
-      name: admin
-      password: admin
+      name: ${ADMIN_USERNAME:admin}
+      # ADMIN_PASSWORD is required — the application will fail to start if not provided.
+      # Set it via environment variable or secrets manager before deploying.
+      password: ${ADMIN_PASSWORD}
 
 de:
   codecentric:
@@ -20,10 +22,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "health,info"
   endpoint:
     health:
-      show-details: always
+      show-details: when-authorized
 
 logging:
   level:

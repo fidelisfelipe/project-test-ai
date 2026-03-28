@@ -10,10 +10,15 @@ on:
   repository_dispatch:
     types: [post-deploy]
 
+permissions:
+  contents: read
+
 jobs:
   smoke-tests:
     name: Run Smoke Tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

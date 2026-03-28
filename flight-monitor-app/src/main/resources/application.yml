@@ -13,7 +13,7 @@ spring:
     open-in-view: false
   h2:
     console:
-      enabled: true
+      enabled: false
       path: /h2-console
   boot:
     admin:
@@ -32,16 +32,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "health,info"
   endpoint:
     health:
-      show-details: always
-    env:
-      post:
-        enabled: true
-  info:
-    env:
-      enabled: true
+      show-details: when-authorized
 
 springdoc:
   api-docs:

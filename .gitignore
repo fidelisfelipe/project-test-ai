@@ -24,3 +24,30 @@ hs_err_pid*
 replay_pid*
 flight-monitor-app/target
 flight-monitor-admin/target
+
+# Sensitive configuration files — never commit secrets
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# Private keys and certificates
+*.pem
+*.p12
+*.jks
+*.keystore
+*.pfx
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Terraform state (may contain secrets)
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# OWASP Dependency Check reports (large generated artifacts)
+**/dependency-check-report.*

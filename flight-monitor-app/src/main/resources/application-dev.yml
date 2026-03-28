@@ -5,6 +5,21 @@ spring:
     console:
       enabled: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+      post:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
 logging:
   level:
     com.flightmonitor: DEBUG
